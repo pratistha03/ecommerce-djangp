@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.shortcuts import render, redirect
 from .models import Customer, Product, Contact
-from .forms import CustomerRegistrationForm, CustomerProfileForm, ContactForm
+from .forms import CustomerRegistrationForm,  ContactForm, CustomerProfileForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
@@ -31,20 +31,24 @@ class ProductDetail(View):
         product=Product.objects.get(pk=pk)
         return render(request, "app/productdetail.html", locals())
 
-class CustomerRegistrationView(View):
-    def get(self, request):
-        form=CustomerRegistrationForm()
-        return render(request, 'app/customerregistration.html', locals())
-    def post(self, request):
-        form=CustomerRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "User Registered Successfully!")
-        else:
-            messages.warning(request, "Invalid Input")
+# class CustomerRegistrationView(View):
+#     def get(self, request):
+#         form=CustomerRegistrationForm()
+#         return render(request, 'app/customerregistration.html', locals())
+#     def post(self, request):
+#         form=CustomerRegistrationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "User Registered Successfully!")
+#         else:
+#             messages.warning(request, "Invalid Input")
 
-        return render(request, 'app/customerregistration.html', locals())
+#         return render(request, 'app/customerregistration.html', locals())
 
+class CustomerRegistrationView(CreateView):
+    form_class=CustomerRegistrationForm
+    success_url=reverse_lazy('login')
+    template_name='app/customerregistration.html'
 
 class ProfileView(View):
     def get(self, request):
@@ -77,25 +81,6 @@ class AddressView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
-# class updateAddress(View):
-#     def get(self, request, pk):
-#         addr=Customer.objects.get(pk=pk)
-#         form=CustomerProfileForm( instance=addr  )
-#         return render(request, 'app/updateAddress.html', locals())
-#     def post(self, request, pk):
-#         form=CustomerProfileForm(request.POST)
-#         if form.is_valid():
-#             addr=Customer.objects.get(pk=pk)
-#             addr.name=form.cleaned_data['name']
-#             addr.locality=form.cleaned_data['locality']
-#             addr.mobile=form.cleaned_data['mobile']
-#             addr.city=form.cleaned_data['city']
-#             addr.state=form.cleaned_data['state']
-#             addr.save()
-#             messages.success(request, "Profile Updated successfully!")
-#         else:
-#             messages.warning(request, "invalid Input")
-#         return redirect("address")
 
 class updateAddress(UpdateView):
     model=Customer
@@ -116,3 +101,4 @@ class ContactView(CreateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+        

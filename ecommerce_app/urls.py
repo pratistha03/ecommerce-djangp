@@ -1,7 +1,6 @@
 from django.conf.urls.static import static 
 from django.conf import settings
 from django.urls import path
-# from . import views
 from .views import AddressView, CategoryView,ContactView, CategoryTitle, ProductDetail, ProfileView, updateAddress, CustomerRegistrationView
 
 from django.contrib.auth import views as auth_view
@@ -31,5 +30,7 @@ urlpatterns = [
     path('changepassword/', auth_view.PasswordChangeView.as_view(template_name='app/passwordchange.html', form_class=MyPasswordChangeForm, success_url='/passwordchangedone') , name="changepassword"),
     path('passwordchangedone/', auth_view.PasswordChangeDoneView.as_view(template_name='app/passwordchangedone.html'), name="passwordchange"),
     
+
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -65,4 +65,14 @@ class Contact(models.Model):
     message =models.TextField()
     def _str_(self):
         return self.name
-    
+
+class Buyer(models.Model):
+    username=models.CharField(max_length=20)
+    name=models.CharField(max_length=100)
+    address=models.CharField(max_length=100)
+    mobile=models.IntegerField(default=0)
+    email=models.EmailField()
+    password1=models.CharField(max_length=100)
+    password2=models.CharField(max_length=100)
+    def _str_(self):
+        return self.name
